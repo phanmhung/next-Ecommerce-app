@@ -30,7 +30,7 @@ async function disconnect() {
     }
   }
 }
-
+//helper function to convert mongo docs to pure js obj
 function convertDocToObj(doc) {
   doc._id = doc._id.toString();
   doc.createdAt = doc.createdAt.toString();
