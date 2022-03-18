@@ -89,12 +89,12 @@ export default function CartScreen() {
               </TableBody>
             </TableContainer>
           </Grid>
-          <Grid item md={3} xs={12}>
+          <Grid md={3} xs={12}>
             <Card>
               <ListItem>
                 <Typography variant="h2">
-                  Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)} : ${' '}
-                  {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)})
+                  Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}) : $
+                  {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                 </Typography>
               </ListItem>
               <ListItem>
