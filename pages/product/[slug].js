@@ -16,8 +16,10 @@ import db from '../../utils/db';
 import Product from '../../models/Product';
 import axios from 'axios';
 import { Store } from '../../utils/Store';
+import { useRouter } from 'next/router';
 
 export default function ProductScreen(props) {
+  const router = useRouter();
   const { dispatch } = useContext(Store);
   const classes = useStyles();
   const { product } = props;
@@ -34,6 +36,8 @@ export default function ProductScreen(props) {
     }
     //dispatch add action
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity: 1 } });
+    //redirect user after adding to cart
+    router.push('/cart');
   };
   return (
     <Layout title={product.name} description={product.description}>
