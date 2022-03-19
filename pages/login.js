@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import {
   Typography,
@@ -11,8 +11,22 @@ import {
 import useStyles from '../utils/styles';
 import NextLink from 'next/link';
 import axios from 'axios';
+import { Store } from '../utils/Store';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 export default function Login() {
+  const router = useRouter();
+  const { redirect } = router.query; // login?redirect=/shipping
+  const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
+  //check one when the userInfo change
+  useEffect(() => {
+    if (userInfo) {
+      router.push('/');
+    }
+  }, userInfo);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const classes = useStyles();
@@ -23,6 +37,9 @@ export default function Login() {
         email,
         password,
       });
+      dispatch({ type: 'USER_LOGIN', payload: data });
+      Cookies.set('userInfo', JSON.stringify(data));
+      router.push(redirect | '/');
       alert('success login');
     } catch (err) {
       alert(err.response.data ? err.response.data.message : err.message);

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 
@@ -12,15 +12,21 @@ import {
   ThemeProvider,
   Switch,
   Badge,
+  Button,
+  MenuItem,
+  Menu,
 } from '@material-ui/core';
 import useStyles from '../utils/styles';
 import { createTheme } from '@material-ui/core/styles';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 export default function Layout({ title, description, children }) {
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { darkMode, cart } = state;
+  const { darkMode, cart, userInfo } = state;
+  const classes = useStyles();
 
   const theme = createTheme({
     typography: {
@@ -53,6 +59,25 @@ export default function Layout({ title, description, children }) {
     const newDarkMode = !darkMode;
     Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
   };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const loginClickHandler = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const loginMenuCloseHandler = () => {
+    setAnchorEl(null);
+  };
+
+  const logoutClickHandler = () => {
+    setAnchorEl(null);
+    dispatch({ type: 'USER_LOGOUT' });
+    Cookies.remove('userInfo');
+    Cookies.remove('cartItems');
+    router.push('/');
+  };
+
   return (
     <div>
       <Head>
@@ -61,16 +86,14 @@ export default function Layout({ title, description, children }) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar position="static" className={useStyles().navbar}>
+        <AppBar position="static" className={classes.navbar}>
           <Toolbar>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={useStyles().brand}>
-                  E-commerce
-                </Typography>
+                <Typography className={classes.brand}>E-commerce</Typography>
               </Link>
             </NextLink>
-            <div className={useStyles().grow}></div>
+            <div className={classes.grow}></div>
             <div>
               <Switch
                 checked={darkMode}
@@ -90,14 +113,45 @@ export default function Layout({ title, description, children }) {
                   )}
                 </Link>
               </NextLink>
-              <NextLink href="/cart" passHref>
-                Login
-              </NextLink>
+              {userInfo ? (
+                <>
+                  <Button
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={loginClickHandler}
+                    className={classes.navbarButton}
+                  >
+                    {userInfo.name}
+                  </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    onClose={loginMenuCloseHandler}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                    open={Boolean(anchorEl)}
+                  >
+                    <MenuItem onClick={loginMenuCloseHandler}>Profile</MenuItem>
+                    <MenuItem onClick={loginMenuCloseHandler}>
+                      My account
+                    </MenuItem>
+                    <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <NextLink href="/login" passHref>
+                  Login
+                </NextLink>
+              )}
             </div>
           </Toolbar>
         </AppBar>
-        <Container className={useStyles().main}>{children}</Container>
-        <footer className={useStyles().footer}>
+        <Container className={classes.main}>{children}</Container>
+        <footer className={classes.footer}>
           <Typography>All rights reserved. E-commerce.</Typography>
         </footer>
       </ThemeProvider>
