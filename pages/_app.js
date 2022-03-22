@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
   return (
-    <SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'left' }}>
+    <SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
       <StoreProvider>
         <Component {...pageProps} />
       </StoreProvider>
