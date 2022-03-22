@@ -8,7 +8,7 @@ const handler = nc();
 
 handler.post(async (req, res) => {
   await db.connect();
-  //create new instatnt
+  //create new instant
   const newUser = new User({
     name: req.body.name,
     email: req.body.email,
