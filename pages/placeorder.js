@@ -84,10 +84,10 @@ function PlaceOrder() {
   };
 
   return (
-    <Layout title="Shopping Cart">
+    <Layout title="Place Order">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
       <Typography component="h1" variant="h1">
-        Shopping Cart
+        Place Order
       </Typography>
 
       <Grid container spacing={1}>
