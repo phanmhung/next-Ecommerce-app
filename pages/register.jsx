@@ -50,10 +50,9 @@ export default function Register() {
         email,
         password,
       });
-      const dataStringify = JSON.stringify(data);
 
       dispatch({ type: 'USER_LOGIN', payload: data });
-      Cookies.set('userInfo', dataStringify);
+      Cookies.set('userInfo', JSON.stringify(data));
       router.push(redirect || '/');
       alert('success login');
     } catch (err) {
